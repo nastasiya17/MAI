@@ -43,9 +43,15 @@ int main() {
 		Q[i][i]=1;
 	}
 
-	bool b=true;
+	double max=0;
+	for (int k=1; k<N; k++) {
+		if (abs(A[k][0])>eps) {
+			max+=pow(A[k][0],2);
+		}
+	}
+	max=pow(max,0.5);
 
-	while (b) {
+	while (max>eps) {
 		for (int i=0; i<N-1; i++) {
 			int j;
 			for (j=0; j<i; j++) {
@@ -114,14 +120,13 @@ int main() {
 			}
 		}
 
-		b=false;
-
+		max=0;
 		for (int k=1; k<N; k++) {
 			if (abs(A[k][0])>eps) {
-				b=true;
-				break;
+				max+=pow(A[k][0],2);
 			}
 		}
+		max=pow(max,0.5);
 
 		Q.assign(N, vector <double>(N,0));
 		for (int i=0; i<N; i++) {
