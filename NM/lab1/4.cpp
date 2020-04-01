@@ -8,7 +8,7 @@ const double eps=0.0001;
 
 int main() {
 	int N, maxi, maxj;
-	double max, phi, sl;
+	double max, phi, sl, t;
 	cin >> N;
 	vector <vector <double>> A (N, vector <double>(N,0));
 	vector <vector <double>> H (N, vector <double>(N,0));
@@ -27,6 +27,7 @@ int main() {
 	max=abs(A[0][N-1]);
 	maxi=0;
 	maxj=N-1;
+	t=0;
 
 	for (int i=0; i<N; i++) {
 		for (int j=i+1; j<N; j++) {
@@ -35,8 +36,10 @@ int main() {
 				maxi=i;
 				maxj=j;
 			}
+			t+=pow(A[i][j],2);
 		}
 	}
+	t=pow(t,0.5);
 
 	for (int i=0; i<N; i++) {
 		Hp[i][i]=1;
@@ -44,7 +47,6 @@ int main() {
 
 	while (max>eps) {
 		phi=atan(2*A[maxi][maxj]/(A[maxi][maxi]-A[maxj][maxj]))/2;
-		vector <vector <double>> H (N, vector <double>(N,0));
 		for (int i=0; i<N; i++) 
 			H[i][i]=1;
 
@@ -57,7 +59,6 @@ int main() {
 
 		for (int i=0; i<N; i++) {
 			for (int j=0; j<N; j++) {
-				Htemp[i][j]=0;
 				for (int k=0; k<N; k++) {
 					Htemp[i][j]+=Hp[i][k]*H[k][j];
 				}
@@ -82,7 +83,6 @@ int main() {
 
 		for (int i=0; i<N; i++) {
 			for (int j=0; j<N; j++) {
-				HtA[i][j]=0;
 				for (int k=0; k<N; k++) {
 					HtA[i][j]+=Ht[i][k]*A[k][j];
 				}
@@ -91,7 +91,6 @@ int main() {
 
 		for (int i=0; i<N; i++) {
 			for (int j=0; j<N; j++) {
-				HtAH[i][j]=0;
 				for (int k=0; k<N; k++) {
 					HtAH[i][j]+=HtA[i][k]*H[k][j];
 				}
@@ -101,10 +100,12 @@ int main() {
 		A=HtAH;
 
 		//вычисление максимального элемента в матрице 
+		//и критерия окончания 
 
 		max=abs(A[0][N-1]);
 		maxi=0;
 		maxj=N-1;
+		t=0;
 
 		for (int i=0; i<N; i++) {
 			for (int j=i+1; j<N; j++) {
@@ -113,9 +114,16 @@ int main() {
 					maxi=i;
 					maxj=j;
 				}
+				t+=pow(A[i][j],2);
 			}
 		}
+		t=pow(t,0.5);
 
+		H.assign(N, vector <double>(N,0));
+		Ht.assign(N, vector <double>(N,0));
+		HtA.assign(N, vector <double>(N,0));
+		HtAH.assign(N, vector <double>(N,0));
+		Htemp.assign(N, vector <double>(N,0));
 	}
 
 	cout << "\nСобственные векторы:\n\n";
